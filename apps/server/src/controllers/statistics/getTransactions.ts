@@ -28,6 +28,12 @@ const controller: RequestHandler<{}, {}, {}, QueryParams> = async (req, res) => 
                 (isNumeric(search) ? { price: { equals: Number(search) } } : {})
             ]
         },
+        // include: { category: { select: { name: true } }, sale: { select: { sold: true } } },
+        select: {
+            categoryId: false, category: { select: { name: true } },
+            saleId: false, sale: { select: { sold: true } },
+            title: true, description: true, image: true, id: true, price: true
+        },
         skip,
         take: 10
     })
