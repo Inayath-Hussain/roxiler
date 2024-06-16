@@ -3,7 +3,8 @@ import { PrismaClient } from "@prisma/client";
 
 
 export const prismaClient = new PrismaClient({
-    log: ["query", "error", "warn"]
+    log: ["query", "error", "warn"],
+    transactionOptions: { timeout: 20000 }
 })
 
 
