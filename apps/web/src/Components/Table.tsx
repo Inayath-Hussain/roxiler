@@ -15,10 +15,10 @@ interface Iprops {
 
 const Table: React.FC<Iprops> = ({ month }) => {
 
-    const [page, setPage] = useState(0);
+    // const [page, setPage] = useState(0);
 
     const [rowData, setRowData] = useState<TransactionsData[]>([]);
-    const [colData, setColData] = useState<Record<"field", keyof TransactionsData>[]>([
+    const [colData] = useState<Record<"field", keyof TransactionsData>[]>([
         { field: "id" },
         { field: "title" },
         { field: "description" },
