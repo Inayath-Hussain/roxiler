@@ -64,6 +64,8 @@ const Table: React.FC<Iprops> = ({ month }) => {
                 </div>
 
 
+                <p>Per Page - 10</p>
+
             </div>
         </div>
     );

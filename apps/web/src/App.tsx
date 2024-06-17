@@ -1,9 +1,10 @@
 import { useState } from "react"
 import Table from "./Components/Table"
+import Sales from "./Components/Sales";
 
 const monthOptions = Array(12).fill(1).map((value, index) => value + index);
 
-const monthDisplayText = {
+export const monthDisplayText = {
   1: "January",
   2: "Februray",
   3: "March",
@@ -28,7 +29,9 @@ function App() {
 
   return (
 
-    <div className="flex flex-col justify-center items-center h-screen w-screen">
+    <div className="flex flex-col justify-center items-center
+    my-10 
+    min-h-screen min-w-screen">
 
 
       {/* month and search */}
@@ -51,6 +54,8 @@ function App() {
 
 
       <Table month={month} />
+
+      <Sales month={month} />
 
     </div>
   )

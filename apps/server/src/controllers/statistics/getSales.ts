@@ -27,17 +27,17 @@ const controller: RequestHandler<{}, {}, {}, Queryparam> = async (req, res, next
     if (isNumeric(month) === false) return res.status(400).json({ message: "month should be a valid number" })
 
 
-    const result = await prismaClient.$queryRaw<SaleQueryData>`
+    const result = await prismaClient.$queryRaw<SaleQueryData[]>`
     SELECT
-        COALESCE(SUM(CASE WHEN sale.sold = true THEN product.price ELSE 0 END), 0) AS totalSalesPrice,
-        COALESCE(CAST(COUNT(CASE WHEN sale.sold = true THEN 1 ELSE NULL END) AS INT), 0)  AS soldCount,
-        COALESCE(CAST(COUNT(CASE WHEN sale.sold = false THEN 1 ELSE NULL END) AS INT), 0) AS unsoldCount
+        COALESCE(SUM(CASE WHEN sale.sold = true THEN product.price ELSE 0 END), 0) AS "totalSalesPrice",
+        COALESCE(CAST(COUNT(CASE WHEN sale.sold = true THEN 1 ELSE NULL END) AS INT), 0)  AS "soldCount",
+        COALESCE(CAST(COUNT(CASE WHEN sale.sold = false THEN 1 ELSE NULL END) AS INT), 0) AS "unsoldCount"
     FROM product
     JOIN sale ON product."saleId" = sale.id
     WHERE EXTRACT(MONTH FROM sale."dateOfSale") = ${Number(month)}
         `
 
-    return res.status(200).json(result)
+    return res.status(200).json(result[0])
 }
 
 
