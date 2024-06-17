@@ -18,7 +18,7 @@ model product {
   title       String   @db.VarChar(255)
   description String   @db.Text
   image       String   @db.VarChar(255)
-  price       Int
+  price       Decimal  @db.Decimal(10, 2)
   categoryId  Int
   category    category @relation("ProductCategory", fields: [categoryId], references: [id])
   saleId      Int      @unique

@@ -10,6 +10,13 @@ interface Queryparam {
     month: string
 }
 
+
+interface SaleQueryData {
+    totalSalesPrice: number
+    soldCount: number
+    unsoldCount: number
+}
+
 const controller: RequestHandler<{}, {}, {}, Queryparam> = async (req, res, next) => {
     const { month } = req.query;
 
@@ -19,12 +26,18 @@ const controller: RequestHandler<{}, {}, {}, Queryparam> = async (req, res, next
 
     if (isNumeric(month) === false) return res.status(400).json({ message: "month should be a valid number" })
 
-    const records = await prismaClient.$queryRaw<sale[]>`
-        SELECT * FROM "sale" WHERE EXTRACT(MONTH FROM "dateOfSale") = ${Number(month)}`
 
-    // for()
+    const result = await prismaClient.$queryRaw<SaleQueryData>`
+    SELECT
+        COALESCE(SUM(CASE WHEN sale.sold = true THEN product.price ELSE 0 END), 0) AS totalSalesPrice,
+        COALESCE(CAST(COUNT(CASE WHEN sale.sold = true THEN 1 ELSE NULL END) AS INT), 0)  AS soldCount,
+        COALESCE(CAST(COUNT(CASE WHEN sale.sold = false THEN 1 ELSE NULL END) AS INT), 0) AS unsoldCount
+    FROM product
+    JOIN sale ON product."saleId" = sale.id
+    WHERE EXTRACT(MONTH FROM sale."dateOfSale") = ${Number(month)}
+        `
 
-    return res.status(200).json({ message: "success" })
+    return res.status(200).json(result)
 }
 
 
