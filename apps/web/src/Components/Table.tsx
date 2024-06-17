@@ -15,9 +15,10 @@ interface Iprops {
 
 const Table: React.FC<Iprops> = ({ month }) => {
 
-    // const [page, setPage] = useState(0);
+    const [page, setPage] = useState(1);
 
     const [rowData, setRowData] = useState<TransactionsData[]>([]);
+
     const [colData] = useState<Record<"field", keyof TransactionsData>[]>([
         { field: "id" },
         { field: "title" },
@@ -30,20 +31,40 @@ const Table: React.FC<Iprops> = ({ month }) => {
 
     useEffect(() => {
         const call = async () => {
-            getTransactionsService(month)
+
+            // add debouncing
+            getTransactionsService(page, month)
                 .then(data => {
                     if (data instanceof ApiError) return
                     setRowData(data)
                 })
-        }
+        };
+
 
         call()
-    }, [month])
+    }, [month, page])
+
 
     return (
-        <div className="ag-theme-quartz h-[600px] w-[1205px]">
+        <div className="ag-theme-quartz h-[500px] w-[1205px]">
+
+            <h1 className='text-center text-4xl my-6'>Transactions</h1>
+
             <AgGridReact rowData={rowData} columnDefs={colData} />
 
+            {/* page data */}
+            <div className='flex flex-row justify-between items-center'>
+                <p>Page No - {page}</p>
+
+
+                {/* page navigation */}
+                <div className='flex flex-row gap-6 mt-8'>
+                    <button onClick={() => setPage(prev => prev - 1)} className='border-[1px] rounded-2xl border-black px-4 py-2'>Previous</button>
+                    <button onClick={() => setPage(prev => prev + 1)} className='border-[1px] rounded-2xl border-black px-4 py-2'>Next</button>
+                </div>
+
+
+            </div>
         </div>
     );
 }

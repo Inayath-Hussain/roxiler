@@ -1,3 +1,3 @@
 export const apiURLs = {
-    getTransactions: (page: number) => `/api/statistics/transactions?page=${page}`
+    getTransactions: (page: number, month: number) => `/api/statistics/transactions?page=${page}&month=${month}`
 }
